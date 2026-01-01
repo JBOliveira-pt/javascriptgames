@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="pt-PT">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Menu de Jogos — Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+</head>
+
+<body>
+    <header class="hero">
+        <div class="hero-inner">
+            <h1>My First Games in <strong>JavaScript</strong></h1>
+            <p class="lead">
+                Six games developed during the Web Development course of the
+                <strong>Software Developer – CESAE Digital</strong> program.<br>
+                Choose a game to try out and take the opportunity to see what I learned in
+                JavaScript while developing it.
+            </p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="cards-grid" aria-label="Lista de jogos">
+
+            <!-- Card 1: Jogo da Memória -->
+            <article class="card" data-game="memoria">
+                <div class="card-media" aria-hidden="true">
+                    <img src="images/JogoDaMemoria.png" alt="Captura de ecrã do Jogo da Memória" class="card-image">
+                </div>
+                <div class="card-body">
+                    <h2>Pairing Game</h2>
+                    <p class="muted">Find the hidden pairs in a 4x3 grid. Scoring and time tracking.</p>
+                    <div class="badges">
+                        <span class="badge">Shuffle</span>
+                        <span class="badge">Matching</span>
+                        <span class="badge">Timer</span>
+                    </div>
+                    <div class="card-actions">
+                        <a class="btn" href="jogos/MEMORIA/index.html" target="_blank" rel="noopener">Play</a>
+                        <button class="btn ghost" data-details="memoria">Details</button>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Card 2: Jogo do Aflito -->
+            <article class="card" data-game="aflito">
+                <div class="card-media">
+                    <img src="images/Aflito.png" alt="Captura de ecrã do Jogo do Aflito" class="card-image">
+                </div>
+                <div class="card-body">
+                    <h2>100 Doors</h2>
+                    <p class="muted">Guess the door between 1 and 100. Hot/cold feedback and limited attempts.</p>
+                    <div class="badges">
+                        <span class="badge">Random</span>
+                        <span class="badge">Feedback</span>
+                        <span class="badge">Attempts</span>
+                    </div>
+                    <div class="card-actions">
+                        <a class="btn" href="jogos/AFLITO/index.html" target="_blank" rel="noopener">Play</a>
+                        <button class="btn ghost" data-details="aflito">Details</button>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Card 3: Pedra, Papel e Tesoura -->
+            <article class="card" data-game="ppt">
+                <div class="card-media">
+                    <img src="images/PedraPapelTesoura.png" alt="Captura de ecrã do jogo Pedra, Papel e Tesoura"
+                        class="card-image">
+                </div>
+                <div class="card-body">
+                    <h2>Rock, Paper, Scissors</h2>
+                    <p class="muted">Classic game to be played against the computer. Custom buttons with emojis.</p>
+                    <div class="badges">
+                        <span class="badge">Random</span>
+                        <span class="badge">PvE</span>
+                        <span class="badge">Emojis</span>
+                    </div>
+                    <div class="card-actions">
+                        <a class="btn" href="jogos/PEDRAPAPELTESOURA/index.html" target="_blank" rel="noopener">Play</a>
+                        <button class="btn ghost" data-details="ppt">Details</button>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Card 4: Aliens no Gramado -->
+            <article class="card" data-game="aliens">
+                <div class="card-media">
+                    <img src="images/AliensNoGramado.png" alt="Captura de ecrã do jogo Aliens no Gramado"
+                        class="card-image">
+                </div>
+                <div class="card-body">
+                    <h2>Aliens on the Grass</h2>
+                    <p class="muted">Catch all aliens. Customizables grid and number of aliens. Time used as a scoring
+                        system.
+                    </p>
+                    <div class="badges">
+                        <span class="badge">Custom</span>
+                        <span class="badge">Dynamic</span>
+                        <span class="badge">Score</span>
+                    </div>
+                    <div class="card-actions">
+                        <a class="btn" href="jogos/ALIENSNOGRAMADO/index.html" target="_blank" rel="noopener">Play</a>
+                        <button class="btn ghost" data-details="aliens">Details</button>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Card 5: Frogger -->
+            <article class="card" data-game="frogger">
+                <div class="card-media">
+                    <img src="images/Frogger.png" alt="Captura de ecrã do jogo Frogger" class="card-image">
+                </div>
+                <div class="card-body">
+                    <h2>Frogger</h2>
+                    <p class="muted">Control the frog. Avoid obstacles and collisions and reach the goal. Score points
+                        by time tracking.
+                    </p>
+                    <div class="badges">
+                        <span class="badge">Movement</span>
+                        <span class="badge">Collisions</span>
+                        <span class="badge">Score</span>
+                    </div>
+                    <div class="card-actions">
+                        <a class="btn" href="jogos/FROGGER/index.html" target="_blank" rel="noopener">Play</a>
+                        <button class="btn ghost" data-details="frogger">Details</button>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Card 6: Pac-Man (adicionado) -->
+            <article class="card" data-game="pacman">
+                <div class="card-media" aria-hidden="true">
+                    <img src="images/PacMan.png" alt="Captura de ecrã do jogo Pac-Man" class="card-image">
+                </div>
+                <div class="card-body">
+                    <h2>Pac‑Man</h2>
+                    <p class="muted">Classic Pac‑Man. Eat pac‑dots, power‑pellets, avoid or eat ghosts. Multiple levels.
+                        Stored scoreboard.</p>
+                    <div class="badges">
+                        <span class="badge">Levels</span>
+                        <span class="badge">Audio</span>
+                        <span class="badge">Scoreboard</span>
+                    </div>
+                    <div class="card-actions">
+                        <a class="btn" href="jogos/PACMAN/index.html" target="_blank" rel="noopener">Play</a>
+                        <button class="btn ghost" data-details="pacman">Details</button>
+                    </div>
+                </div>
+            </article>
+
+        </section>
+    </main>
+
+    <!-- Modal detalhado -->
+    <div id="modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="modal-panel" role="document">
+            <button id="modalClose" class="modal-close" aria-label="Fechar">✕</button>
+            <div id="modalContent" class="modal-content" tabindex="0">
+                <!-- Conteúdo dinâmico inserido por app.js -->
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <p>© 2026 Developed by <strong>Jeison Oliveira</p>
+    </footer>
+
+</body>
+
+</html>
