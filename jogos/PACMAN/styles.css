@@ -1,0 +1,126 @@
+body {
+    background-image: url(images/background.png);
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+    padding-top: 0px;
+}
+
+.scoreboard {
+    color: rgb(238, 12, 12);
+    font-family: fantasy;
+    font-size: 22px;
+    border: 5px solid black;
+    padding: 5px 20px;
+    display: flex;
+    justify-content: space-between;
+    width: 250px;
+    margin-top: 25px;
+}
+
+.grid {
+    width: 560px;
+    height: 560px;
+    border: solid black 2px;
+    display: flex;
+    flex-wrap: wrap;
+    background-color: black;
+    overflow: visible;
+}
+
+.grid div {
+    width: 20px;
+    height: 20px;
+}
+
+.pac-dot {
+    background-image: url(images/pacdot.gif);
+    background-size: cover;
+}
+
+.wall {
+    background-color: rgb(17, 7, 105);
+}
+
+.power-pellet {
+    background-image: url(images/cherry.png);
+    background-size: cover;
+}
+
+.blinky {
+    background-image: url(images/blinky.png);
+    background-size: cover;
+}
+
+.pinky {
+    background-image: url(images/pinky.png);
+    background-size: cover;
+}
+
+.inky {
+    background-image: url(images/inky.png);
+    background-size: cover;
+}
+
+.clyde {
+    background-image: url(images/clyde.png);
+    background-size: cover;
+}
+
+.pac-man {
+    background-size: cover;
+}
+
+.pac-man.pac-right {
+    background-image: url(images/pacmanright.gif);
+}
+
+.pac-man.pac-left {
+    background-image: url(images/pacmanleft.gif);
+}
+
+.pac-man.pac-up {
+    background-image: url(images/pacmanup.gif);
+}
+
+.pac-man.pac-down {
+    background-image: url(images/pacmandown.gif);
+}
+
+.pac-man:not(.pac-right):not(.pac-left):not(.pac-up):not(.pac-down) {
+    background-image: url(images/pacmanright.gif);
+}
+
+.scared-ghost {
+    background-image: url(images/scaredghost.png);
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    z-index: 1;
+    overflow: visible;
+}
+
+.scared-ghost::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 140%;
+    height: 140%;
+    transform: translate(-50%, -50%) scale(1);
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.95) 0%,
+        rgba(255, 255, 255, 0.6) 30%,
+        rgba(255, 255, 255, 0) 70%
+    );
+    filter: blur(8px);
+    pointer-events: none;
+    z-index: 0;
+    will-change: transform, opacity;
+}

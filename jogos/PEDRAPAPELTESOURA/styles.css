@@ -1,0 +1,120 @@
+body {
+    margin: 0;
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial;
+    background: linear-gradient(180deg, #0f1724, #061022);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h3 {
+    font-size: 1.1em;
+    color: #b8bfc39f;
+    font-weight: 400;
+    text-align: center;
+    margin-top: 0px;
+}
+
+/* card container */
+.card {
+    width: min(320px, 96%);
+    background: #0000005f;
+    border-radius: 12px;
+    padding: 22px;
+    box-shadow: 0 6px 20px rgba(2, 6, 23, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(13, 33, 51, 0.04);
+    text-align: center;
+}
+
+/* Choices row */
+.choices {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    margin: 12px 0 18px;
+}
+
+/* Symbol buttons */
+.choice {
+    display: inline-grid;
+    place-items: center;
+    width: 74px;
+    height: 74px;
+    border-radius: 14px;
+    border: 1px rgba(255, 255, 255, 0.262);
+    background: linear-gradient(0deg, #fffbfb4c, #0c70f347);
+    font-size: 30px;
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    box-shadow: 0 8px 20px rgba(11, 43, 60, 0.04);
+}
+
+/* visually emphasize the selected choice */
+.choice[aria-pressed="true"] {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 16px 36px rgba(11, 43, 60, 0.1);
+    background: linear-gradient(180deg, #e8f0ff, #dfeeff);
+    border-color: rgba(11, 97, 255, 0.18);
+}
+
+/* hover/focus states */
+.choice:hover,
+.choice:focus {
+    transform: translateY(-3px);
+    outline: none;
+    box-shadow: 0 12px 30px rgba(11, 43, 60, 0.06);
+}
+
+/* keyboard focus ring for accessibility */
+.choice:focus-visible {
+    box-shadow: 0 0 0 4px rgba(11, 97, 255, 0.12);
+}
+
+/* Display area */
+.display {
+    display: grid;
+    gap: 8px;
+    margin-top: 8px;
+    justify-items: center;
+}
+
+.display > div {
+    font-size: 15px;
+    color: #25414f;
+    background: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    min-width: 240px;
+    border: 1px solid rgba(11, 43, 60, 0.04);
+}
+
+/* emphasise the result value */
+.display .value {
+    font-weight: 700;
+    margin-left: 6px;
+    color: #0b2b3b;
+}
+
+/* responsive */
+@media (max-width: 480px) {
+    .choice {
+        width: 62px;
+        height: 62px;
+        font-size: 26px;
+    }
+    .display > div {
+        min-width: 200px;
+        font-size: 14px;
+        padding: 8px;
+    }
+    .card {
+        padding: 16px;
+        border-radius: 10px;
+    }
+}

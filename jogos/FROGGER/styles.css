@@ -1,0 +1,147 @@
+#grid {
+    width: 360px;
+    height: 360px;
+    border: 2px solid black;
+    box-shadow: 0 6px 20px rgba(2, 6, 23, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.02);
+    display: flex;
+    flex-wrap: wrap;
+    background-image: url(images/grass.gif);
+    background-size: cover;
+    margin: 0.5rem auto;
+}
+
+#grid div {
+    width: 40px;
+    height: 40px;
+    box-sizing: border-box;
+    border: 1px solid rgba(0, 0, 0, 0.267);
+    position: relative;
+}
+
+.titulo {
+    width: 400px;
+    height: 200px;
+    margin-top: -20px;
+    margin-bottom: -30px;
+}
+
+body {
+    margin: 0;
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial;
+    background: linear-gradient(180deg, #0f1724, #061022);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    color: rgb(255, 255, 255);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h3 {
+    font-size: 1.1em;
+    color: #b8bfc39f;
+    font-weight: 400;
+    text-align: center;
+    margin-top: 0px;
+}
+
+.end {
+    background-image: url(images/end.png);
+    background-size: cover;
+    background-position: center;
+}
+
+.river-top {
+    background-image: url(images/river-top.gif);
+}
+
+.river-bottom {
+    background-image: url(images/river-bottom.gif);
+}
+
+.road-left {
+    background-image: url(images/road-left.png);
+}
+
+.road-right {
+    background-image: url(images/road-right.png);
+}
+
+.road-left,
+.road-right {
+    background-size: cover;
+}
+
+.river-top.log1,
+.river-top.log2,
+.river-top.log3 {
+    background-image: url(images/log.png), url(images/river-top.gif);
+    background-size: cover;
+}
+
+.river-top.log4,
+.river-top.log5 {
+    background-image: url(images/river-top.gif);
+    background-size: cover;
+}
+
+.river-bottom.log1,
+.river-bottom.log2,
+.river-bottom.log3 {
+    background-image: url(images/log.png), url(images/river-bottom.gif);
+    background-size: cover;
+}
+
+.river-bottom.log4,
+.river-bottom.log5 {
+    background-image: url(images/river-bottom.gif);
+    background-size: cover;
+}
+
+.car-left1 {
+    background-image: url(images/carLeft.png), url(images/road-left.png);
+    background-size: cover;
+    background-position: center;
+}
+
+.car-left2,
+.car-left3 {
+    background-image: transparent;
+}
+
+.car-right1 {
+    background-image: url(images/carRight.png), url(images/road-right.png);
+    background-size: cover;
+    background-position: center;
+}
+
+.car-right2,
+.car-right3 {
+    background-image: transparent;
+}
+
+.frog-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none;
+    object-fit: contain;
+    image-rendering: pixelated;
+}
+
+.frog-img.dead {
+    filter: grayscale(10%) brightness(0.6);
+    transform: scale(1.3);
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+#last-time {
+    text-align: center;
+    font-weight: 600;
+}

@@ -1,0 +1,54 @@
+body {
+    margin: 0;
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial;
+    background: linear-gradient(180deg, #0f1724, #061022);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h3 {
+    font-size: 1.1em;
+    color: #b8bfc39f;
+    font-weight: 400;
+    text-align: center;
+    margin-top: 0px;
+}
+
+#grid {
+    width: 400px;
+    height: 400px;
+    box-shadow: 0 6px 20px rgba(2, 6, 23, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(13, 33, 51, 0.04);
+    display: flex;
+    flex-wrap: wrap;
+    background-image: url(images/grass.gif);
+    background-size: cover;
+    background-position: center;
+}
+
+#grid div {
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(0, 0, 0, 0.077);
+    box-sizing: border-box;
+}
+
+.boneco {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.alien {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url(images/alien.png);
+}

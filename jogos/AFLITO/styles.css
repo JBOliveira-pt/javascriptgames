@@ -1,0 +1,112 @@
+body {
+    margin: 0;
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial;
+    background: linear-gradient(180deg, #0f1724, #061022);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container {
+    width: min(350px, 96%);
+    background: #0000005f;
+    border-radius: 12px;
+    padding: 18px 20px;
+    box-shadow: 0 6px 20px rgba(2, 6, 23, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(13, 33, 51, 0.04);
+    text-align: center;
+}
+
+h2 {
+    font-size: 1.4em;
+    color: #ffffff;
+    font-weight: 600;
+    margin-top: 0px;
+}
+h3 {
+    font-size: 1.1em;
+    color: #b8bfc39f;
+    font-weight: 400;
+    text-align: center;
+    margin-top: 0px;
+}
+
+/* Form row */
+form {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+
+/* Input styling */
+input[type="number"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 140px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid #e6eef6;
+    background: #ffffff;
+    color: #0d2133;
+    font-size: 16px;
+    outline: none;
+    text-align: center;
+    transition: box-shadow 0.14s ease, transform 0.06s ease;
+}
+
+/* Button styling */
+button#botaoAdvinhar {
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+    color: #ffffff;
+    background: linear-gradient(180deg, #0b61ff, #0661d9);
+    box-shadow: 0 8px 20px rgba(11, 97, 255, 0.12);
+    transition: transform 0.12s ease, filter 0.12s ease;
+}
+button#botaoAdvinhar:hover {
+    transform: translateY(-3px);
+    filter: brightness(1.03);
+}
+button#botaoAdvinhar:active {
+    transform: translateY(-1px);
+}
+
+/* Result area */
+#resultado {
+    margin-top: 12px;
+    font-size: 15px;
+    color: #b2d3e4;
+    min-height: 28px;
+    display: block;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: transparent;
+}
+
+/* Responsive */
+@media (max-width: 420px) {
+    input[type="number"] {
+        width: 110px;
+        padding: 9px;
+    }
+    button#botaoAdvinhar {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+    .container {
+        padding: 14px;
+        border-radius: 10px;
+    }
+}

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rock, Paper, Scissors</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
+</head>
+
+<body>
+
+    <h1>Rock, Paper, Scissors</h1>
+    <h3>Choose your weapon against the computer!</h3>
+
+    <main class="card">
+        <div id="botoes-jogador" class="choices" role="radiogroup" aria-label="Escolha do jogador">
+            <button id="pedra" class="choice" data-choice="pedra" aria-pressed="false" aria-label="Pedra">✊</button>
+            <button id="papel" class="choice" data-choice="papel" aria-pressed="false" aria-label="Papel">✋</button>
+            <button id="tesoura" class="choice" data-choice="tesoura" aria-pressed="false"
+                aria-label="Tesoura">✌️</button>
+        </div>
+
+        <div id="display" class="display" aria-live="polite">
+            <div id="user-choice">Player: <span class="value">—</span></div>
+            <div id="computer-choice">Computer: <span class="value">—</span></div>
+            <div id="result">Result: <span class="value">—</span></div>
+        </div>
+    </main>
+</body>
+
+</html>

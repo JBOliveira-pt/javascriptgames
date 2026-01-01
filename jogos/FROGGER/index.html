@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Frogger</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js" defer></script>
+</head>
+
+<body>
+    <header style="text-align:center; margin-top:1rem;">
+        <img class="titulo" src="images/titulo.png" />
+        <h3>Help the frog cross the river and the road in the shortest time!</h3>
+    </header>
+    <div id="last-time" aria-live="polite">
+        Try to beat the last time: —
+    </div>
+    <main>
+        <div id="grid" aria-label="Tabuleiro do jogo Frogger" role="grid"></div>
+    </main>
+</body>
+
+</html>
