@@ -8,22 +8,9 @@
     <link rel="stylesheet" href="styles.css" />
     <script src="app.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js" defer></script>
-    <style>
-    /* container para o joystick */
-    #dynamic {
-      position: absolute;
-      left: 12px;
-      bottom: 12px;
-      width: 140px;
-      height: 140px;
-      touch-action: none; /* importante para evitar gestos do navegador */
-      z-index: 100;
-    }
-  </style>
 </head>
 
 <body>
-    <canvas id="game"></canvas>
     <header style="text-align:center; margin-top:1rem;">
         <img class="titulo" src="images/titulo.png" />
         <h3>Help the frog cross the river and the road in the shortest time!</h3>
@@ -35,35 +22,9 @@
         <div id="grid" aria-label="Tabuleiro do jogo Frogger" role="grid"></div>
     </main>
     <div id="dynamic"></div>
-
-  <script src="https://unpkg.com/nipplejs@0.9.0/dist/nipplejs.min.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const zone = document.getElementById('dynamic');
-      const joystick = nipplejs.create({
-        zone: zone,
-        mode: 'dynamic',
-        color: 'blue',
-        size: 120,   
-        multitouch: false 
-      });
-      joystick.on('start', (evt, data) => {
-      });
-      joystick.on('move', (evt, data) => {
-        if (!data || !data.vector) return;
-        const vx = data.vector.x; 
-        const vy = data.vector.y; 
-        game.setJoystickVelocity(vx, vy);
-      });
-
-      joystick.on('end', (evt, data) => {
-        game.stopJoystick();
-      });
-    });
-  </script>
-    
 </body>
 
 
 </html>
+
 
