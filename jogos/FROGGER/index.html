@@ -8,16 +8,22 @@
     <link rel="stylesheet" href="styles.css" />
     <script src="app.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js" defer></script>
-    <script src="./dist/nipplejs.min.js"></script>
-<script>
-    var dynamic = nipplejs.create({
-        zone: document.getElementById('dynamic'),
-        color: 'blue'
-    });
-</script>
+    <style>
+    /* container para o joystick */
+    #dynamic {
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+      width: 140px;
+      height: 140px;
+      touch-action: none; /* importante para evitar gestos do navegador */
+      z-index: 100;
+    }
+  </style>
 </head>
 
 <body>
+    <canvas id="game"></canvas>
     <header style="text-align:center; margin-top:1rem;">
         <img class="titulo" src="images/titulo.png" />
         <h3>Help the frog cross the river and the road in the shortest time!</h3>
@@ -60,3 +66,4 @@
 
 
 </html>
+
