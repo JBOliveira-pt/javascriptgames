@@ -74,31 +74,34 @@ function createFrogElement() {
     frog.classList.add("frog-img");
 }
 
-function moveFrog(e) {
+function moveByKey(key) {
     if (!timerStarted) {
         timerStarted = true;
         startTime = Date.now();
     }
-    if (frog.parentElement) frog.parentElement.removeChild(frog);
-    switch (e.key) {
+    if (frog && frog.parentElement) frog.parentElement.removeChild(frog);
+
+    switch (key) {
         case "ArrowUp":
             if (currentPosition - gridWidth >= 0) currentPosition += moveUp;
             break;
         case "ArrowDown":
-            if (currentPosition + gridWidth < gridSize)
-                currentPosition += moveDown;
+            if (currentPosition + gridWidth < gridSize) currentPosition += moveDown;
             break;
         case "ArrowLeft":
             if (currentPosition % gridWidth !== 0) currentPosition += moveLeft;
             break;
         case "ArrowRight":
-            if (currentPosition % gridWidth < gridWidth - 1)
-                currentPosition += moveRight;
+            if (currentPosition % gridWidth < gridWidth - 1) currentPosition += moveRight;
             break;
         default:
             break;
     }
     squares[currentPosition].appendChild(frog);
+}
+
+function moveFrog(e) {
+    moveByKey(e.key);
 }
 
 function moveLogTop(logCell) {
@@ -257,4 +260,58 @@ function initGame() {
 function resetGame() {
     initGame();
 }
+
+function isTouchDevice() {
+    return (
+        'ontouchstart' in window ||
+        (navigator.maxTouchPoints && navigator.maxTouchPoints > 0) ||
+        (window.matchMedia && window.matchMedia('(pointer:coarse)').matches)
+    );
+}
+
+function angleToArrowKey(deg) {
+    if (deg === undefined || deg === null) return null;
+    if (deg >= 315 || deg < 45) return "ArrowRight";
+    if (deg >= 45 && deg < 135) return "ArrowDown";
+    if (deg >= 135 && deg < 225) return "ArrowLeft";
+    return "ArrowUp";
+}
+
+function initJoystickIfNeeded() {
+    const zone = document.getElementById('dynamic');
+    if (!zone) return;
+
+    if (!isTouchDevice() || typeof nipplejs === 'undefined') {
+        zone.style.display = 'none';
+        return;
+    }
+
+    zone.style.display = 'block';
+    const joystick = nipplejs.create({
+        zone: zone,
+        mode: 'static',
+        position: { left: '70px', bottom: '70px' },
+        color: 'blue',
+        size: 120,
+        multitouch: false
+    });
+
+    let lastJoystickDir = null;
+
+    joystick.on('move', (evt, data) => {
+        if (!data || !data.angle || data.distance < 10) return;
+        const deg = data.angle.degree;
+        const key = angleToArrowKey(deg);
+        if (key && key !== lastJoystickDir) {
+            moveByKey(key);
+            lastJoystickDir = key;
+        }
+    });
+
+    joystick.on('end', () => {
+        lastJoystickDir = null;
+    });
+}
+
+initJoystickIfNeeded();
 initGame();
