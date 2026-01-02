@@ -6,8 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Frogger</title>
     <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/nipplejs@0.9.0/dist/nipplejs.min.js" defer></script>
     <script src="app.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js" defer></script>
+
+    <style>
+      #dynamic {
+        position: absolute;
+        left: 12px;
+        bottom: 12px;
+        width: 140px;
+        height: 140px;
+        touch-action: none;
+        z-index: 100;
+        display: none;
+      }
+    </style>
 </head>
 
 <body>
@@ -23,8 +37,4 @@
     </main>
     <div id="dynamic"></div>
 </body>
-
-
 </html>
-
-
