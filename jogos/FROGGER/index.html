@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="styles.css" />
     <script src="app.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js" defer></script>
+    <script src="./dist/nipplejs.min.js"></script>
+<script>
+    var dynamic = nipplejs.create({
+        zone: document.getElementById('dynamic'),
+        color: 'blue'
+    });
+</script>
 </head>
 
 <body>
@@ -21,6 +28,35 @@
     <main>
         <div id="grid" aria-label="Tabuleiro do jogo Frogger" role="grid"></div>
     </main>
+    <div id="dynamic"></div>
+
+  <script src="https://unpkg.com/nipplejs@0.9.0/dist/nipplejs.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const zone = document.getElementById('dynamic');
+      const joystick = nipplejs.create({
+        zone: zone,
+        mode: 'dynamic',
+        color: 'blue',
+        size: 120,   
+        multitouch: false 
+      });
+      joystick.on('start', (evt, data) => {
+      });
+      joystick.on('move', (evt, data) => {
+        if (!data || !data.vector) return;
+        const vx = data.vector.x; 
+        const vy = data.vector.y; 
+        game.setJoystickVelocity(vx, vy);
+      });
+
+      joystick.on('end', (evt, data) => {
+        game.stopJoystick();
+      });
+    });
+  </script>
+    
 </body>
+
 
 </html>
