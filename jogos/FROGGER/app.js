@@ -74,7 +74,7 @@ function createFrogElement() {
     frog.classList.add("frog-img");
 }
 
-/* Função que move o sapo a partir de uma direção textual - usada pelo joystick.*/
+/* Função que move o sapo a partir de uma direção textual (usada pelo D-pad e teclado) */
 function moveFrogDirection(direction) {
     if (!timerStarted) {
         timerStarted = true;
@@ -250,38 +250,73 @@ function initIntervals() {
     checkInterval = setInterval(checkWin, 50);
 }
 
-/* joystick estático com nipple.js */
-function initJoystick() {
-    if (typeof nipplejs === "undefined") return;
-    const zone = document.getElementById("joystick");
-    if (!zone) return;
+/* ---------- D‑pad: cada toque = um input (suporta touch e mouse) ---------- */
+function initDpad() {
+    const dpad = document.getElementById("dpad");
+    if (!dpad) return;
 
-    const manager = nipplejs.create({
-        zone,
-        mode: "static",
-        position: { left: "55px", bottom: "55px" },
-        color: "#ffffff",
-        size: 100,
-        restOpacity: 0.6,
-    });
+    const buttons = Array.from(dpad.querySelectorAll(".dpad-btn"));
 
-    let lastMove = 0;
-    const THROTTLE = 800;
-
-    manager.on("move", (evt, data) => {
-        if (!data || !data.direction) return;
-        const now = Date.now();
-        if (now - lastMove < THROTTLE) return;
-        lastMove = now;
-
-        let angle = data.direction.angle;
-        if (angle.includes("-")) {
-            angle = angle.split("-")[0];
+    function handleActivate(dir) {
+        if (typeof moveFrogDirection === "function") {
+            moveFrogDirection(dir);
         }
-        moveFrogDirection(angle);
-    });
-    manager.on("start", () => {});
-    manager.on("end", () => {});
+    }
+
+    if (window.PointerEvent) {
+        buttons.forEach((btn) => {
+            btn.addEventListener("pointerdown", (e) => {
+                e.preventDefault();
+                btn.classList.add("active");
+                handleActivate(btn.dataset.dir);
+            });
+            btn.addEventListener("pointerup", () =>
+                btn.classList.remove("active")
+            );
+            btn.addEventListener("pointercancel", () =>
+                btn.classList.remove("active")
+            );
+            btn.addEventListener("pointerleave", () =>
+                btn.classList.remove("active")
+            );
+
+            btn.setAttribute("tabindex", "0");
+            btn.addEventListener("keydown", (ev) => {
+                if (ev.key === "Enter" || ev.key === " ") {
+                    ev.preventDefault();
+                    btn.classList.add("active");
+                    handleActivate(btn.dataset.dir);
+                    setTimeout(() => btn.classList.remove("active"), 120);
+                }
+            });
+        });
+    } else {
+        buttons.forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+                e.preventDefault();
+                handleActivate(btn.dataset.dir);
+            });
+            btn.addEventListener("touchstart", (e) => {
+                e.preventDefault();
+                btn.classList.add("active");
+                handleActivate(btn.dataset.dir);
+                setTimeout(() => btn.classList.remove("active"), 120);
+            });
+            btn.addEventListener("touchend", () =>
+                btn.classList.remove("active")
+            );
+
+            btn.setAttribute("tabindex", "0");
+            btn.addEventListener("keydown", (ev) => {
+                if (ev.key === "Enter" || ev.key === " ") {
+                    ev.preventDefault();
+                    btn.classList.add("active");
+                    handleActivate(btn.dataset.dir);
+                    setTimeout(() => btn.classList.remove("active"), 120);
+                }
+            });
+        });
+    }
 }
 
 function initGame() {
@@ -315,10 +350,9 @@ function initGame() {
     document.addEventListener("keydown", moveFrog);
 
     initIntervals();
-    initJoystick(); // Inicializa o joystick
+    initDpad();
 }
 function resetGame() {
     initGame();
 }
 initGame();
-
