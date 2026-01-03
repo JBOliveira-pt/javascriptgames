@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -9,6 +10,7 @@
     <script src="app.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js" defer></script>
 </head>
+
 <body>
     <header style="text-align:center; margin-top:1rem;">
         <img class="titulo" src="images/titulo.png" />
@@ -20,6 +22,29 @@
     <main>
         <div id="grid" aria-label="Tabuleiro do jogo Frogger" role="grid"></div>
     </main>
-    <div id="joystick" aria-hidden="true"></div>
+
+    <!-- D‑pad com SVG inline -->
+    <div id="dpad" aria-label="Controle direcional" role="navigation">
+        <button class="dpad-btn up" data-dir="up" aria-label="Mover para cima" title="Cima" type="button">
+            <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false">
+                <polygon points="12,4 20,16 4,16" fill="white" />
+            </svg>
+        </button>
+        <button class="dpad-btn left" data-dir="left" aria-label="Mover para esquerda" title="Esquerda" type="button">
+            <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false">
+                <polygon points="4,12 16,4 16,20" fill="white" />
+            </svg>
+        </button>
+        <button class="dpad-btn right" data-dir="right" aria-label="Mover para direita" title="Direita" type="button">
+            <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false">
+                <polygon points="20,12 8,4 8,20" fill="white" />
+            </svg>
+        </button>
+        <button class="dpad-btn down" data-dir="down" aria-label="Mover para baixo" title="Baixo" type="button">
+            <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false">
+                <polygon points="12,20 4,8 20,8" fill="white" />
+            </svg>
+        </button>
+    </div>
 </body>
 </html>
