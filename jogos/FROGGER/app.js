@@ -74,6 +74,34 @@ function createFrogElement() {
     frog.classList.add("frog-img");
 }
 
+/* Função que move o sapo a partir de uma direção textual - usada pelo joystick.*/
+function moveFrogDirection(direction) {
+    if (!timerStarted) {
+        timerStarted = true;
+        startTime = Date.now();
+    }
+    if (frog.parentElement) frog.parentElement.removeChild(frog);
+    switch (direction) {
+        case "up":
+            if (currentPosition - gridWidth >= 0) currentPosition += moveUp;
+            break;
+        case "down":
+            if (currentPosition + gridWidth < gridSize)
+                currentPosition += moveDown;
+            break;
+        case "left":
+            if (currentPosition % gridWidth !== 0) currentPosition += moveLeft;
+            break;
+        case "right":
+            if (currentPosition % gridWidth < gridWidth - 1)
+                currentPosition += moveRight;
+            break;
+        default:
+            break;
+    }
+    squares[currentPosition].appendChild(frog);
+}
+
 function moveFrog(e) {
     if (!timerStarted) {
         timerStarted = true;
@@ -222,6 +250,40 @@ function initIntervals() {
     checkInterval = setInterval(checkWin, 50);
 }
 
+/* joystick estático com nipple.js */
+function initJoystick() {
+    if (typeof nipplejs === "undefined") return;
+    const zone = document.getElementById("joystick");
+    if (!zone) return;
+
+    const manager = nipplejs.create({
+        zone,
+        mode: "static",
+        position: { left: "55px", bottom: "55px" },
+        color: "#ffffff",
+        size: 100,
+        restOpacity: 0.6,
+    });
+
+    let lastMove = 0;
+    const THROTTLE = 300;
+
+    manager.on("move", (evt, data) => {
+        if (!data || !data.direction) return;
+        const now = Date.now();
+        if (now - lastMove < THROTTLE) return;
+        lastMove = now;
+
+        let angle = data.direction.angle;
+        if (angle.includes("-")) {
+            angle = angle.split("-")[0];
+        }
+        moveFrogDirection(angle);
+    });
+    manager.on("start", () => {});
+    manager.on("end", () => {});
+}
+
 function initGame() {
     if (autoMoveInterval) {
         clearInterval(autoMoveInterval);
@@ -253,6 +315,7 @@ function initGame() {
     document.addEventListener("keydown", moveFrog);
 
     initIntervals();
+    initJoystick(); // Inicializa o joystick
 }
 function resetGame() {
     initGame();
