@@ -10,7 +10,6 @@
     background-size: cover;
     margin: 0.5rem auto;
 }
-
 #grid div {
     width: 40px;
     height: 40px;
@@ -18,14 +17,12 @@
     border: 1px solid rgba(0, 0, 0, 0.267);
     position: relative;
 }
-
 .titulo {
     width: 400px;
     height: 200px;
     margin-top: -20px;
     margin-bottom: -30px;
 }
-
 body {
     margin: 0;
     font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto,
@@ -39,7 +36,6 @@ body {
     flex-direction: column;
     align-items: center;
 }
-
 h3 {
     font-size: 1.1em;
     color: #b8bfc39f;
@@ -47,29 +43,23 @@ h3 {
     text-align: center;
     margin-top: 0px;
 }
-
 .end {
     background-image: url(images/end.png);
     background-size: cover;
     background-position: center;
 }
-
 .river-top {
     background-image: url(images/river-top.gif);
 }
-
 .river-bottom {
     background-image: url(images/river-bottom.gif);
 }
-
 .road-left {
     background-image: url(images/road-left.png);
 }
-
 .road-right {
     background-image: url(images/road-right.png);
 }
-
 .road-left,
 .road-right {
     background-size: cover;
@@ -81,13 +71,11 @@ h3 {
     background-image: url(images/log.png), url(images/river-top.gif);
     background-size: cover;
 }
-
 .river-top.log4,
 .river-top.log5 {
     background-image: url(images/river-top.gif);
     background-size: cover;
 }
-
 .river-bottom.log1,
 .river-bottom.log2,
 .river-bottom.log3 {
@@ -100,24 +88,20 @@ h3 {
     background-image: url(images/river-bottom.gif);
     background-size: cover;
 }
-
 .car-left1 {
     background-image: url(images/carLeft.png), url(images/road-left.png);
     background-size: cover;
     background-position: center;
 }
-
 .car-left2,
 .car-left3 {
     background-image: transparent;
 }
-
 .car-right1 {
     background-image: url(images/carRight.png), url(images/road-right.png);
     background-size: cover;
     background-position: center;
 }
-
 .car-right2,
 .car-right3 {
     background-image: transparent;
@@ -134,14 +118,32 @@ h3 {
     object-fit: contain;
     image-rendering: pixelated;
 }
-
 .frog-img.dead {
     filter: grayscale(10%) brightness(0.6);
     transform: scale(1.3);
     transition: transform 0.3s ease, filter 0.3s ease;
 }
-
 #last-time {
     text-align: center;
     font-weight: 600;
+}
+
+/* ---------- joystick ---------- */
+#joystick {
+    position: fixed;
+    left: 16px;
+    bottom: 16px; 
+    width: 110px;
+    height: 110px;
+    z-index: 60;
+    touch-action: none; 
+    pointer-events: auto;
+    display: block;
+}
+
+/* Esconde o joystick em telas maiores */
+@media (min-width: 800px) {
+    #joystick {
+        display: none;
+    }
 }
