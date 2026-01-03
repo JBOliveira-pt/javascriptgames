@@ -266,7 +266,7 @@ function initJoystick() {
     });
 
     let lastMove = 0;
-    const THROTTLE = 300;
+    const THROTTLE = 800;
 
     manager.on("move", (evt, data) => {
         if (!data || !data.direction) return;
@@ -321,3 +321,4 @@ function resetGame() {
     initGame();
 }
 initGame();
+
