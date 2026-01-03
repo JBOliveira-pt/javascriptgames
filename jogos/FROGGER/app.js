@@ -24,6 +24,7 @@ let logsTop = [];
 let logsBottom = [];
 let carsLeft = [];
 let carsRight = [];
+let dpadInitialized = false;
 
 function formatTime(ms) {
     const s = ms / 1000;
@@ -74,7 +75,7 @@ function createFrogElement() {
     frog.classList.add("frog-img");
 }
 
-/* Função que move o sapo a partir de uma direção textual (usada pelo D-pad e teclado) */
+/* Função que move o sapo a partir de uma direção textual (usada pelo D-pad) */
 function moveFrogDirection(direction) {
     if (!timerStarted) {
         timerStarted = true;
@@ -250,8 +251,9 @@ function initIntervals() {
     checkInterval = setInterval(checkWin, 50);
 }
 
-/* ---------- D‑pad: cada toque = um input (suporta touch e mouse) ---------- */
+/* ---------- D‑pad ---------- */
 function initDpad() {
+    if (dpadInitialized) return;
     const dpad = document.getElementById("dpad");
     if (!dpad) return;
 
@@ -262,24 +264,19 @@ function initDpad() {
             moveFrogDirection(dir);
         }
     }
-
     if (window.PointerEvent) {
         buttons.forEach((btn) => {
-            btn.addEventListener("pointerdown", (e) => {
+            const onPointerDown = (e) => {
                 e.preventDefault();
                 btn.classList.add("active");
                 handleActivate(btn.dataset.dir);
-            });
-            btn.addEventListener("pointerup", () =>
-                btn.classList.remove("active")
-            );
-            btn.addEventListener("pointercancel", () =>
-                btn.classList.remove("active")
-            );
-            btn.addEventListener("pointerleave", () =>
-                btn.classList.remove("active")
-            );
-
+            };
+            const onPointerUp = () => btn.classList.remove("active");
+            const onPointerLeave = () => btn.classList.remove("active");
+            btn.addEventListener("pointerdown", onPointerDown);
+            btn.addEventListener("pointerup", onPointerUp);
+            btn.addEventListener("pointercancel", onPointerUp);
+            btn.addEventListener("pointerleave", onPointerLeave);
             btn.setAttribute("tabindex", "0");
             btn.addEventListener("keydown", (ev) => {
                 if (ev.key === "Enter" || ev.key === " ") {
@@ -292,16 +289,19 @@ function initDpad() {
         });
     } else {
         buttons.forEach((btn) => {
-            btn.addEventListener("click", (e) => {
+            const onClick = (e) => {
                 e.preventDefault();
                 handleActivate(btn.dataset.dir);
-            });
-            btn.addEventListener("touchstart", (e) => {
+            };
+            const onTouchStart = (e) => {
                 e.preventDefault();
                 btn.classList.add("active");
                 handleActivate(btn.dataset.dir);
                 setTimeout(() => btn.classList.remove("active"), 120);
-            });
+            };
+
+            btn.addEventListener("click", onClick);
+            btn.addEventListener("touchstart", onTouchStart);
             btn.addEventListener("touchend", () =>
                 btn.classList.remove("active")
             );
@@ -317,6 +317,8 @@ function initDpad() {
             });
         });
     }
+
+    dpadInitialized = true;
 }
 
 function initGame() {
