@@ -9,8 +9,10 @@ let posicaoAtual;
 let timeStart, timeEnd, timeTotal;
 let moveUp, moveDown, moveLeft, moveRight;
 let dpadInitialized = false;
+let inputEnabled = true;
 
 function validarMovimento(event) {
+    if (!inputEnabled) return;
     if (event.repeat) return;
 
     let dir = null;
@@ -102,6 +104,7 @@ function moverBoneco(direction) {
             alert("Alien captured! " + faltam + " aliens remaining!");
         } else {
             inputEnabled = false;
+            document.removeEventListener("keydown", validarMovimento);
 
             timeEnd = Date.now();
             timeTotal = Math.floor((timeEnd - timeStart) / 1000);
@@ -156,6 +159,7 @@ function initDpad() {
     const buttons = Array.from(dpad.querySelectorAll(".dpad-btn"));
 
     function handleActivate(dir) {
+        if (!inputEnabled) return;
         moverBonecoDirection(dir);
     }
 
@@ -266,6 +270,7 @@ function initGame() {
         criarAliens();
     }
 
+    inputEnabled = true;
     document.addEventListener("keydown", validarMovimento);
     initDpad();
 }
