@@ -1,25 +1,13 @@
 const grid = document.querySelector("#grid");
-const gridSize = parseInt(prompt("Choose grid size (e.g., 10 for 10x10):", 10));
-
-const posicaoInicial = Math.floor(Math.random() * gridSize * gridSize);
-let posicaoAtual = posicaoInicial;
-
-let timeStart, timeEnd, timeTotal;
-
-const gridWidthHeight = gridSize * 40;
-grid.style.width = gridWidthHeight + "px";
-grid.style.height = gridWidthHeight + "px";
-
-const aliens = parseInt(prompt("Choose number of aliens:", 5));
-
-const squares = [];
-const moveUp = -gridSize;
-const moveDown = gridSize;
-const moveLeft = -1;
-const moveRight = +1;
-
 const jsConfetti = new JSConfetti();
+const squares = [];
 
+let gridSize;
+let aliens;
+let posicaoInicial;
+let posicaoAtual;
+let timeStart, timeEnd, timeTotal;
+let moveUp, moveDown, moveLeft, moveRight;
 let dpadInitialized = false;
 
 function validarMovimento(event) {
@@ -47,7 +35,7 @@ function validarMovimento(event) {
     }
 }
 
-/* wrapper que recebe as direções textuais e chama a função existente moverBoneco */
+/* ---------- Movimento por deslocamento numérico (D-Pad) ---------- */
 function moverBonecoDirection(directionString) {
     const map = {
         up: moveUp,
@@ -56,11 +44,27 @@ function moverBonecoDirection(directionString) {
         right: moveRight,
     };
     const direction = map[directionString];
-    if (direction !== undefined) {
-        moverBoneco(direction);
+    if (direction === undefined) return;
+
+    switch (directionString) {
+        case "up":
+            if (posicaoAtual < gridSize) return;
+            break;
+        case "down":
+            if (posicaoAtual >= gridSize * gridSize - gridSize) return;
+            break;
+        case "left":
+            if (posicaoAtual % gridSize === 0) return;
+            break;
+        case "right":
+            if (posicaoAtual % gridSize === gridSize - 1) return;
+            break;
     }
+
+    moverBoneco(direction);
 }
 
+/* ---------- Movimento efetivo e colisões ---------- */
 function moverBoneco(direction) {
     if (!timeStart) {
         timeStart = Date.now();
@@ -108,12 +112,20 @@ function moverBoneco(direction) {
 
             jsConfetti.addConfetti();
 
-            document.removeEventListener("keydown", validarMovimento);
+            setTimeout(() => {
+                resetGame();
+            }, 300);
         }
     }
 }
 
+/* ---------- Criação de aliens ---------- */
 function criarAliens() {
+    const maxAliens = gridSize * gridSize - 1;
+    if (aliens > maxAliens) {
+        aliens = maxAliens;
+    }
+
     let posicaoAlien = Math.floor(Math.random() * gridSize * gridSize);
 
     if (
@@ -131,7 +143,6 @@ function createGrid() {
         squares.push(square);
         grid.appendChild(square);
     }
-    squares[posicaoInicial].classList.add("boneco");
 }
 
 /* ---------- D‑pad ---------- */
@@ -203,13 +214,60 @@ function initDpad() {
     dpadInitialized = true;
 }
 
-/* --- Inicialização --- */
-createGrid();
+/* ---------- Inicialização ---------- */
+function initGame() {
+    document.removeEventListener("keydown", validarMovimento);
 
-squares[posicaoAtual].style.backgroundImage = "url(images/boneco-baixo.png)";
-for (let i = 0; i < aliens; i++) {
-    criarAliens();
+    grid.innerHTML = "";
+    squares.length = 0;
+
+    const defaultSize = 10;
+    const defaultAliens = 5;
+    const inputSize = parseInt(
+        prompt("Choose grid size (e.g., 10 for 10x10):", defaultSize)
+    );
+
+    gridSize =
+        Number.isInteger(inputSize) && inputSize > 1 ? inputSize : defaultSize;
+
+    const inputAliens = parseInt(
+        prompt("Choose number of aliens:", defaultAliens)
+    );
+    aliens =
+        Number.isInteger(inputAliens) && inputAliens > 0
+            ? inputAliens
+            : defaultAliens;
+
+    const gridWidthHeight = gridSize * 40;
+    grid.style.width = gridWidthHeight + "px";
+    grid.style.height = gridWidthHeight + "px";
+
+    moveUp = -gridSize;
+    moveDown = gridSize;
+    moveLeft = -1;
+    moveRight = +1;
+    posicaoInicial = Math.floor(Math.random() * gridSize * gridSize);
+    posicaoAtual = posicaoInicial;
+    timeStart = undefined;
+    timeEnd = undefined;
+    timeTotal = undefined;
+
+    createGrid();
+
+    squares[posicaoAtual].classList.add("boneco");
+    squares[posicaoAtual].style.backgroundImage =
+        "url(images/boneco-baixo.png)";
+
+    for (let i = 0; i < aliens; i++) {
+        criarAliens();
+    }
+
+    document.addEventListener("keydown", validarMovimento);
+    initDpad();
 }
 
-document.addEventListener("keydown", validarMovimento);
-initDpad();
+function resetGame() {
+    initGame();
+}
+
+initGame();
