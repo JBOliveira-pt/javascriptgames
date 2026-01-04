@@ -1,7 +1,4 @@
 const grid = document.querySelector("#grid");
-
-document.addEventListener("keydown", validarMovimento);
-
 const gridSize = parseInt(prompt("Choose grid size (e.g., 10 for 10x10):", 10));
 
 const posicaoInicial = Math.floor(Math.random() * gridSize * gridSize);
@@ -23,33 +20,52 @@ const moveRight = +1;
 
 const jsConfetti = new JSConfetti();
 
+let dpadInitialized = false;
+
 function validarMovimento(event) {
+    if (event.repeat) return;
+
+    let dir = null;
+    switch (event.key) {
+        case "ArrowUp":
+            dir = "up";
+            break;
+        case "ArrowDown":
+            dir = "down";
+            break;
+        case "ArrowLeft":
+            dir = "left";
+            break;
+        case "ArrowRight":
+            dir = "right";
+            break;
+    }
+
+    if (dir) {
+        event.preventDefault();
+        moverBonecoDirection(dir);
+    }
+}
+
+/* wrapper que recebe as direções textuais e chama a função existente moverBoneco */
+function moverBonecoDirection(directionString) {
+    const map = {
+        up: moveUp,
+        down: moveDown,
+        left: moveLeft,
+        right: moveRight,
+    };
+    const direction = map[directionString];
+    if (direction !== undefined) {
+        moverBoneco(direction);
+    }
+}
+
+function moverBoneco(direction) {
     if (!timeStart) {
         timeStart = Date.now();
     }
 
-    let direction = 0;
-
-    switch (event.key) {
-        case "ArrowUp":
-            if (posicaoAtual >= gridSize) direction = moveUp;
-            break;
-        case "ArrowDown":
-            if (posicaoAtual < gridSize * gridSize - gridSize)
-                direction = moveDown;
-            break;
-        case "ArrowLeft":
-            if (posicaoAtual % gridSize !== 0) direction = moveLeft;
-            break;
-        case "ArrowRight":
-            if (posicaoAtual % gridSize !== gridSize - 1) direction = moveRight;
-            break;
-    }
-
-    if (direction !== 0) moverBoneco(direction);
-}
-
-function moverBoneco(direction) {
     squares[posicaoAtual].classList.remove("boneco");
     squares[posicaoAtual].style.backgroundImage = "";
 
@@ -118,10 +134,82 @@ function createGrid() {
     squares[posicaoInicial].classList.add("boneco");
 }
 
+/* ---------- D‑pad ---------- */
+function initDpad() {
+    if (dpadInitialized) return;
+    const dpad = document.getElementById("dpad");
+    if (!dpad) return;
+
+    const buttons = Array.from(dpad.querySelectorAll(".dpad-btn"));
+
+    function handleActivate(dir) {
+        moverBonecoDirection(dir);
+    }
+
+    if (window.PointerEvent) {
+        buttons.forEach((btn) => {
+            const onPointerDown = (e) => {
+                e.preventDefault();
+                btn.classList.add("active");
+                handleActivate(btn.dataset.dir);
+            };
+            const onPointerUp = () => btn.classList.remove("active");
+            const onPointerLeave = () => btn.classList.remove("active");
+            btn.addEventListener("pointerdown", onPointerDown);
+            btn.addEventListener("pointerup", onPointerUp);
+            btn.addEventListener("pointercancel", onPointerUp);
+            btn.addEventListener("pointerleave", onPointerLeave);
+            btn.setAttribute("tabindex", "0");
+            btn.addEventListener("keydown", (ev) => {
+                if (ev.key === "Enter" || ev.key === " ") {
+                    ev.preventDefault();
+                    btn.classList.add("active");
+                    handleActivate(btn.dataset.dir);
+                    setTimeout(() => btn.classList.remove("active"), 120);
+                }
+            });
+        });
+    } else {
+        buttons.forEach((btn) => {
+            const onClick = (e) => {
+                e.preventDefault();
+                handleActivate(btn.dataset.dir);
+            };
+            const onTouchStart = (e) => {
+                e.preventDefault();
+                btn.classList.add("active");
+                handleActivate(btn.dataset.dir);
+                setTimeout(() => btn.classList.remove("active"), 120);
+            };
+
+            btn.addEventListener("click", onClick);
+            btn.addEventListener("touchstart", onTouchStart);
+            btn.addEventListener("touchend", () =>
+                btn.classList.remove("active")
+            );
+
+            btn.setAttribute("tabindex", "0");
+            btn.addEventListener("keydown", (ev) => {
+                if (ev.key === "Enter" || ev.key === " ") {
+                    ev.preventDefault();
+                    btn.classList.add("active");
+                    handleActivate(btn.dataset.dir);
+                    setTimeout(() => btn.classList.remove("active"), 120);
+                }
+            });
+        });
+    }
+
+    dpadInitialized = true;
+}
+
+/* --- Inicialização --- */
 createGrid();
 
 squares[posicaoAtual].style.backgroundImage = "url(images/boneco-baixo.png)";
-
 for (let i = 0; i < aliens; i++) {
     criarAliens();
 }
+
+document.addEventListener("keydown", validarMovimento);
+initDpad();
