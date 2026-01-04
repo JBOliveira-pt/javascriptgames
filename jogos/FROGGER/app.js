@@ -103,31 +103,19 @@ function moveFrogDirection(direction) {
     squares[currentPosition].appendChild(frog);
 }
 
-function moveFrog(e) {
-    if (!timerStarted) {
-        timerStarted = true;
-        startTime = Date.now();
+// Wrapper para keydown event (usado pelo teclado)
+function onKeyMove(e) {
+    const map = {
+        ArrowUp: "up",
+        ArrowDown: "down",
+        ArrowLeft: "left",
+        ArrowRight: "right",
+    };
+    const dir = map[e.key];
+    if (dir) {
+        e.preventDefault();
+        moveFrogDirection(dir);
     }
-    if (frog.parentElement) frog.parentElement.removeChild(frog);
-    switch (e.key) {
-        case "ArrowUp":
-            if (currentPosition - gridWidth >= 0) currentPosition += moveUp;
-            break;
-        case "ArrowDown":
-            if (currentPosition + gridWidth < gridSize)
-                currentPosition += moveDown;
-            break;
-        case "ArrowLeft":
-            if (currentPosition % gridWidth !== 0) currentPosition += moveLeft;
-            break;
-        case "ArrowRight":
-            if (currentPosition % gridWidth < gridWidth - 1)
-                currentPosition += moveRight;
-            break;
-        default:
-            break;
-    }
-    squares[currentPosition].appendChild(frog);
 }
 
 function moveLogTop(logCell) {
@@ -185,7 +173,7 @@ function autoMove() {
 
 function endGame(won) {
     const jsConfetti = new JSConfetti();
-    document.removeEventListener("keydown", moveFrog);
+    document.removeEventListener("keydown", onKeyMove);
     clearInterval(autoMoveInterval);
     clearInterval(checkInterval);
     autoMoveInterval = null;
@@ -330,7 +318,7 @@ function initGame() {
         clearInterval(checkInterval);
         checkInterval = null;
     }
-    document.removeEventListener("keydown", moveFrog);
+    document.removeEventListener("keydown", onKeyMove);
 
     grid.innerHTML = "";
     squares = [];
@@ -349,7 +337,7 @@ function initGame() {
     timerStarted = false;
     startTime = 0;
 
-    document.addEventListener("keydown", moveFrog);
+    document.addEventListener("keydown", onKeyMove);
 
     initIntervals();
     initDpad();
