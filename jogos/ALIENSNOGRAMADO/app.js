@@ -101,9 +101,8 @@ function moverBoneco(direction) {
         if (faltam !== 0) {
             alert("Alien captured! " + faltam + " aliens remaining!");
         } else {
-
             inputEnabled = false;
-            
+
             timeEnd = Date.now();
             timeTotal = Math.floor((timeEnd - timeStart) / 1000);
 
@@ -219,9 +218,8 @@ function initDpad() {
 
 /* ---------- Inicialização ---------- */
 function initGame() {
-
     inputEnabled = false;
-    
+
     document.removeEventListener("keydown", validarMovimento);
 
     grid.innerHTML = "";
@@ -277,4 +275,3 @@ function resetGame() {
 }
 
 initGame();
-
