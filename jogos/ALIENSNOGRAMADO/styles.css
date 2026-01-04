@@ -56,7 +56,7 @@ h3 {
 /* ===== D‑pad styles ===== */
 #dpad {
     position: fixed;
-    left: 16px;
+    right: 16px;
     bottom: 16px;
     width: 168px;
     height: 168px;
@@ -120,3 +120,4 @@ h3 {
         display: none;
     }
 }
+
