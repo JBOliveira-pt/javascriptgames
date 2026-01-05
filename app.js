@@ -1,303 +1,137 @@
-const grid = document.querySelector("#grid");
-const jsConfetti = new JSConfetti();
-const squares = [];
-
-let gridSize;
-let aliens;
-let posicaoInicial;
-let posicaoAtual;
-let timeStart;
-let timeEnd;
-let timeTotal;
-
-let moveUp;
-let moveDown;
-let moveLeft;
-let moveRight;
-
-let inputEnabled = true; 
-let dpadInitialized = false;
-
-/* ---------- Validação de teclado ---------- */
-function validarMovimento(event) {
-
-    if (!inputEnabled) return;
-    if (event.repeat) return;
-
-    let dir = null;
-    switch (event.key) {
-        case "ArrowUp":
-            dir = "up";
-            break;
-        case "ArrowDown":
-            dir = "down";
-            break;
-        case "ArrowLeft":
-            dir = "left";
-            break;
-        case "ArrowRight":
-            dir = "right";
-            break;
-    }
-
-    if (dir) {
-        event.preventDefault();
-        moverBonecoDirection(dir);
-    }
-}
-
-/* ---------- Movimento por deslocamento numérico (D-Pad) ---------- */
-function moverBonecoDirection(directionString) {
-
-    if (!inputEnabled) return;
-
-    const map = {
-        up: moveUp,
-        down: moveDown,
-        left: moveLeft,
-        right: moveRight,
+// app.js — controla o modal com os detalhes de cada jogo
+(() => {
+    const details = {
+        memoria: {
+            title: "Pairing Game",
+            summary: `
+        <p>Cards grid where cards are flipped. Objective: find matching pairs. Scoring system and timer.</p>
+      `,
+            learned: `
+        <h4>What I learned in JavaScript</h4>
+        <ul>
+          <li>DOM manipulation to dynamically create/remove cards.</li>
+          <li>Click events, debouncing (preventing rapid clicks), and matching logic.</li>
+          <li>Shuffling (simple Fisher‑Yates algorithm) and game state management (flipped cards, found pairs).</li>
+          <li>Timers (setInterval / setTimeout) for stopwatch and effects.</li>
+          <li>Basic accessibility: focus, description, and user feedback.</li>
+        </ul>
+      `,
+        },
+        aflito: {
+            title: "100 Doors",
+            summary: `
+        <p>Numbered doors 1–100. The player tries to guess the door. Hot/cold feedback, limited attempts, and proximity indication.</p>
+      `,
+            learned: `
+        <h4>What I learned in JavaScript</h4>
+        <ul>
+          <li>Random number generation and user input validation.</li>
+          <li>Comparisons and feedback logic (distance between guess and target).</li>
+          <li>Game state: attempts, game reset, and persistence.</li>
+          <li>UX: gradual hints and animations to indicate success/failure.</li>
+        </ul>
+      `,
+        },
+        aliens: {
+            title: "Aliens on the Grass",
+            summary: `
+        <p>Customizables grid (choose rows/columns) and number of aliens on the map. Time is used as a scoring system.</p>
+      `,
+            learned: `
+        <h4>What I learned in JavaScript</h4>
+        <ul>
+          <li>Dynamic grid construction (creating elements based on parameters).</li>
+          <li>Managing multiple states (alive/caught aliens, time, goal).</li>
+          <li>Delegated events to optimize clicks on the grid.</li>
+          <li>Pure functions and code modularization for easier configuration.</li>
+        </ul>
+      `,
+        },
+        ppt: {
+            title: "Rock, Paper, Scissors",
+            summary: `
+        <p>Game against the computer with move choice, simple AI heuristics, animations, and results (wins/draws/losses).</p>
+      `,
+            learned: `
+        <h4>What I learned in JavaScript</h4>
+        <ul>
+          <li>Randomization and decision logic for a simple AI.</li>
+          <li>DOM manipulation and animations for result transitions.</li>
+          <li>Simple reactive programming (updating UI as state changes).</li>
+        </ul>
+      `,
+        },
+        frogger: {
+            title: "Frogger",
+            summary: `
+        <p>Control the frog with keyboard. Avoid collisions and obstacles to reach the goal. Multiple objects moving on the screen. Score points by time tracking.</p>
+      `,
+            learned: `
+        <h4>What I learned in JavaScript</h4>
+        <ul>
+          <li>Game loop with requestAnimationFrame to update positions and animations.</li>
+          <li>Collision detection (bounding boxes), life management, and game states.</li>
+          <li>Keyboard and touch controls, separation between rendering and logic.</li>
+          <li>Simple performance optimizations (avoiding unnecessary reflows).</li>
+        </ul>
+      `,
+        },
+        pacman: {
+            title: "Pac‑Man",
+            summary: `
+        <p>Implementation of the classic Pac‑Man: eat pac‑dots, power‑pellets, avoid or eat ghosts when they are scared, and advance through 4 different levels (levels.json). With sounds (audio), top 10 storage (localStorage), and overlay for menus/scoreboard.</p>
+      `,
+            learned: `
+        <h4>What I learned in JavaScript</h4>
+        <ul>
+          <li>Modularization (separating overlays into modules and loading levels via JSON).</li>
+          <li>DOM manipulation to dynamically build the grid and update classes (actors, tiles).</li>
+          <li>Managing multiple timers (setInterval for ghosts, setTimeout for power‑pellet), and careful cleanup when switching levels.</li>
+          <li>Using the Audio API (preparing currentTime, play/pause) and handling play() promises.</li>
+          <li>Persistence with localStorage (top scores) and UX with accessible modal overlays.</li>
+        </ul>
+      `,
+        },
     };
-    const direction = map[directionString];
-    if (direction === undefined) return;
 
-    switch (directionString) {
-        case "up":
-            if (posicaoAtual < gridSize) return;
-            break;
-        case "down":
-            if (posicaoAtual >= gridSize * gridSize - gridSize) return;
-            break;
-        case "left":
-            if (posicaoAtual % gridSize === 0) return;
-            break;
-        case "right":
-            if (posicaoAtual % gridSize === gridSize - 1) return;
-            break;
+    // abrir modal com conteúdo
+    const modal = document.getElementById("modal");
+    const modalContent = document.getElementById("modalContent");
+    const modalClose = document.getElementById("modalClose");
+
+    function openModal(id) {
+        const d = details[id];
+        if (!d) return;
+        modalContent.innerHTML = `
+      <h3>${d.title}</h3>
+      ${d.summary}
+      ${d.learned}
+    `;
+        modal.setAttribute("aria-hidden", "false");
+        // foco para acessibilidade
+        modalContent.focus();
     }
 
-    moverBoneco(direction);
-}
-
-/* ---------- Movimento efetivo e colisões ---------- */
-function moverBoneco(direction) {
-    if (!inputEnabled) return;
-
-    if (!timeStart) {
-        timeStart = Date.now();
+    function closeModal() {
+        modal.setAttribute("aria-hidden", "true");
+        modalContent.innerHTML = "";
     }
 
-    squares[posicaoAtual].classList.remove("boneco");
-    squares[posicaoAtual].style.backgroundImage = "";
-
-    posicaoAtual += direction;
-
-    squares[posicaoAtual].classList.add("boneco");
-    switch (direction) {
-        case moveUp:
-            squares[posicaoAtual].style.backgroundImage =
-                "url(images/boneco-cima.png)";
-            break;
-        case moveDown:
-            squares[posicaoAtual].style.backgroundImage =
-                "url(images/boneco-baixo.png)";
-            break;
-        case moveLeft:
-            squares[posicaoAtual].style.backgroundImage =
-                "url(images/boneco-esquerda.png)";
-            break;
-        case moveRight:
-            squares[posicaoAtual].style.backgroundImage =
-                "url(images/boneco-direita.png)";
-            break;
-    }
-
-    if (squares[posicaoAtual].classList.contains("alien")) {
-        squares[posicaoAtual].classList.remove("alien");
-        const faltam = document.querySelectorAll(".alien").length;
-
-        if (faltam !== 0) {
-            alert("Alien captured! " + faltam + " aliens remaining!");
-        } else {
-
-            inputEnabled = false;
-            document.removeEventListener("keydown", validarMovimento);
-
-            timeEnd = Date.now();
-            timeTotal = Math.floor((timeEnd - timeStart) / 1000);
-
-            alert(
-                "YOU WON! You captured all the aliens in " +
-                    timeTotal +
-                    " seconds!"
-            );
-
-            jsConfetti.addConfetti();
-
-            setTimeout(() => {
-                resetGame();
-            }, 300);
+    // Delegate: escuta clicks nos botões 'Detalhes'
+    document.addEventListener("click", (e) => {
+        const btn = e.target.closest("button[data-details]");
+        if (btn) {
+            const id = btn.getAttribute("data-details");
+            openModal(id);
         }
-    }
-}
+        if (e.target === modalClose) closeModal();
+        // fechar ao clicar fora do painel
+        if (e.target === modal) closeModal();
+    });
 
-function criarAliens() {
-    const maxAliens = gridSize * gridSize - 1;
-    if (aliens > maxAliens) {
-        aliens = maxAliens;
-    }
-
-    let placed = 0;
-    const totalCells = gridSize * gridSize;
-
-    while (placed < aliens) {
-        let posicaoAlien = Math.floor(Math.random() * totalCells);
-
-        if (
-            squares[posicaoAlien].classList.contains("alien") ||
-            squares[posicaoAlien].classList.contains("boneco")
-        ) {
-            continue;
-        }
-
-        squares[posicaoAlien].classList.add("alien");
-        placed++;
-    }
-}
-
-function createGrid() {
-    for (let i = 0; i < gridSize * gridSize; i++) {
-        const square = document.createElement("div");
-        squares.push(square);
-        grid.appendChild(square);
-    }
-}
-
-/* ---------- D‑pad (botões) ---------- */
-function initDpad() {
-    if (dpadInitialized) return;
-    const dpad = document.getElementById("dpad");
-    if (!dpad) return;
-
-    const buttons = Array.from(dpad.querySelectorAll(".dpad-btn"));
-
-    function handleActivate(dir) {
-
-        if (!inputEnabled) return;
-        moverBonecoDirection(dir);
-    }
-
-    if (window.PointerEvent) {
-        buttons.forEach((btn) => {
-            const onPointerDown = (e) => {
-                e.preventDefault();
-                btn.classList.add("active");
-                handleActivate(btn.dataset.dir);
-            };
-            const onPointerUp = () => btn.classList.remove("active");
-            const onPointerLeave = () => btn.classList.remove("active");
-            btn.addEventListener("pointerdown", onPointerDown);
-            btn.addEventListener("pointerup", onPointerUp);
-            btn.addEventListener("pointercancel", onPointerUp);
-            btn.addEventListener("pointerleave", onPointerLeave);
-            btn.setAttribute("tabindex", "0");
-            btn.addEventListener("keydown", (ev) => {
-                if (ev.key === "Enter" || ev.key === " ") {
-                    ev.preventDefault();
-                    btn.classList.add("active");
-                    handleActivate(btn.dataset.dir);
-                    setTimeout(() => btn.classList.remove("active"), 120);
-                }
-            });
-        });
-    } else {
-        buttons.forEach((btn) => {
-            const onClick = (e) => {
-                e.preventDefault();
-                handleActivate(btn.dataset.dir);
-            };
-            const onTouchStart = (e) => {
-                e.preventDefault();
-                btn.classList.add("active");
-                handleActivate(btn.dataset.dir);
-                setTimeout(() => btn.classList.remove("active"), 120);
-            };
-
-            btn.addEventListener("click", onClick);
-            btn.addEventListener("touchstart", onTouchStart);
-            btn.addEventListener("touchend", () =>
-                btn.classList.remove("active")
-            );
-
-            btn.setAttribute("tabindex", "0");
-            btn.addEventListener("keydown", (ev) => {
-                if (ev.key === "Enter" || ev.key === " ") {
-                    ev.preventDefault();
-                    btn.classList.add("active");
-                    handleActivate(btn.dataset.dir);
-                    setTimeout(() => btn.classList.remove("active"), 120);
-                }
-            });
-        });
-    }
-
-    dpadInitialized = true;
-}
-
-/* ---------- Inicialização ---------- */
-function initGame() {
-
-    inputEnabled = false;
-    document.removeEventListener("keydown", validarMovimento);
-
-    grid.innerHTML = "";
-    squares.length = 0;
-
-    const defaultSize = 10;
-    const defaultAliens = 5;
-    const inputSize = parseInt(
-        prompt("Choose grid size (e.g., 10 for 10x10):", defaultSize)
-    );
-
-    gridSize =
-        Number.isInteger(inputSize) && inputSize > 1 ? inputSize : defaultSize;
-
-    const inputAliens = parseInt(
-        prompt("Choose number of aliens:", defaultAliens)
-    );
-    aliens =
-        Number.isInteger(inputAliens) && inputAliens > 0
-            ? inputAliens
-            : defaultAliens;
-
-    const gridWidthHeight = gridSize * 40;
-    grid.style.width = gridWidthHeight + "px";
-    grid.style.height = gridWidthHeight + "px";
-
-    moveUp = -gridSize;
-    moveDown = gridSize;
-    moveLeft = -1;
-    moveRight = +1;
-    posicaoInicial = Math.floor(Math.random() * gridSize * gridSize);
-    posicaoAtual = posicaoInicial;
-    timeStart = undefined;
-    timeEnd = undefined;
-    timeTotal = undefined;
-
-    createGrid();
-
-    squares[posicaoAtual].classList.add("boneco");
-    squares[posicaoAtual].style.backgroundImage =
-        "url(images/boneco-baixo.png)";
-
-    criarAliens();
-
-    inputEnabled = true;
-    document.addEventListener("keydown", validarMovimento);
-    initDpad();
-}
-
-function resetGame() {
-    initGame();
-}
-
-initGame();
+    // fechar com ESC
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && modal.getAttribute("aria-hidden") === "false")
+            closeModal();
+    });
+})();
