@@ -6,38 +6,34 @@ let gridSize;
 let aliens;
 let posicaoInicial;
 let posicaoAtual;
-let timeStart, timeEnd, timeTotal;
-let moveUp, moveDown, moveLeft, moveRight;
-let dpadInitialized = false;
+let timeStart;
+let timeEnd;
+let timeTotal;
+
+let moveUp;
+let moveDown;
+let moveLeft;
+let moveRight;
+
 let inputEnabled = true;
+let dpadInitialized = false;
 
+/* ---------- Validação de teclado ---------- */
 function validarMovimento(event) {
-    if (!inputEnabled) return;
-    if (event.repeat) return;
-
-    let dir = null;
-    switch (event.key) {
-        case "ArrowUp":
-            dir = "up";
-            break;
-        case "ArrowDown":
-            dir = "down";
-            break;
-        case "ArrowLeft":
-            dir = "left";
-            break;
-        case "ArrowRight":
-            dir = "right";
-            break;
-    }
-
+    const map = {
+        ArrowUp: "up",
+        ArrowDown: "down",
+        ArrowLeft: "left",
+        ArrowRight: "right",
+    };
+    const dir = map[event.key];
     if (dir) {
         event.preventDefault();
         moverBonecoDirection(dir);
     }
 }
 
-/* ---------- Movimento por deslocamento numérico (D-Pad) ---------- */
+/* ---------- Movimento por direção textual (usado pelo D‑pad e teclado) ---------- */
 function moverBonecoDirection(directionString) {
     const map = {
         up: moveUp,
@@ -63,47 +59,49 @@ function moverBonecoDirection(directionString) {
             break;
     }
 
-    moverBoneco(direction);
+    moverBoneco(directionString, direction);
 }
 
 /* ---------- Movimento efetivo e colisões ---------- */
-function moverBoneco(direction) {
+function moverBoneco(directionString, directionOffset) {
     if (!timeStart) {
         timeStart = Date.now();
     }
 
     squares[posicaoAtual].classList.remove("boneco");
     squares[posicaoAtual].style.backgroundImage = "";
-
-    posicaoAtual += direction;
-
+    posicaoAtual += directionOffset;
     squares[posicaoAtual].classList.add("boneco");
-    switch (direction) {
-        case moveUp:
+
+    // Define sprite com base na direção textual
+    switch (directionString) {
+        case "up":
             squares[posicaoAtual].style.backgroundImage =
                 "url(images/boneco-cima.png)";
             break;
-        case moveDown:
+        case "down":
             squares[posicaoAtual].style.backgroundImage =
                 "url(images/boneco-baixo.png)";
             break;
-        case moveLeft:
+        case "left":
             squares[posicaoAtual].style.backgroundImage =
                 "url(images/boneco-esquerda.png)";
             break;
-        case moveRight:
+        case "right":
             squares[posicaoAtual].style.backgroundImage =
                 "url(images/boneco-direita.png)";
             break;
     }
 
+    // Colisão com alien
     if (squares[posicaoAtual].classList.contains("alien")) {
         squares[posicaoAtual].classList.remove("alien");
         const faltam = document.querySelectorAll(".alien").length;
+
         if (faltam !== 0) {
             alert("Alien captured! " + faltam + " aliens remaining!");
         } else {
-            inputEnabled = false;
+            // Vitória
             document.removeEventListener("keydown", validarMovimento);
 
             timeEnd = Date.now();
@@ -124,22 +122,29 @@ function moverBoneco(direction) {
     }
 }
 
-/* ---------- Criação de aliens ---------- */
+/* ---------- Criação de aliens e grid ---------- */
 function criarAliens() {
     const maxAliens = gridSize * gridSize - 1;
     if (aliens > maxAliens) {
         aliens = maxAliens;
     }
 
-    let posicaoAlien = Math.floor(Math.random() * gridSize * gridSize);
+    let placed = 0;
+    const totalCells = gridSize * gridSize;
 
-    if (
-        squares[posicaoAlien].classList.contains("alien") ||
-        squares[posicaoAlien].classList.contains("boneco")
-    ) {
-        return criarAliens();
+    while (placed < aliens) {
+        let posicaoAlien = Math.floor(Math.random() * totalCells);
+
+        if (
+            squares[posicaoAlien].classList.contains("alien") ||
+            squares[posicaoAlien].classList.contains("boneco")
+        ) {
+            continue;
+        }
+
+        squares[posicaoAlien].classList.add("alien");
+        placed++;
     }
-    squares[posicaoAlien].classList.add("alien");
 }
 
 function createGrid() {
@@ -150,7 +155,7 @@ function createGrid() {
     }
 }
 
-/* ---------- D‑pad ---------- */
+/* ---------- D‑pad (botões) ---------- */
 function initDpad() {
     if (dpadInitialized) return;
     const dpad = document.getElementById("dpad");
@@ -159,8 +164,9 @@ function initDpad() {
     const buttons = Array.from(dpad.querySelectorAll(".dpad-btn"));
 
     function handleActivate(dir) {
-        if (!inputEnabled) return;
-        moverBonecoDirection(dir);
+        if (typeof moverBonecoDirection === "function") {
+            moverBonecoDirection(dir);
+        }
     }
 
     if (window.PointerEvent) {
@@ -222,8 +228,6 @@ function initDpad() {
 
 /* ---------- Inicialização ---------- */
 function initGame() {
-    inputEnabled = false;
-
     document.removeEventListener("keydown", validarMovimento);
 
     grid.innerHTML = "";
@@ -266,11 +270,8 @@ function initGame() {
     squares[posicaoAtual].style.backgroundImage =
         "url(images/boneco-baixo.png)";
 
-    for (let i = 0; i < aliens; i++) {
-        criarAliens();
-    }
+    criarAliens();
 
-    inputEnabled = true;
     document.addEventListener("keydown", validarMovimento);
     initDpad();
 }
