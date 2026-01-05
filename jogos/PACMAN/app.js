@@ -6,7 +6,7 @@ let gameEnded = false;
 let pacmanCurrentIndex;
 let currentLevel = 0;
 
-let levels = []; //preenchido pelo levels.json
+let levels = [];
 
 const scoreDisplay = document.getElementById("score");
 const levelDisplay = document.getElementById("level");
@@ -26,6 +26,9 @@ const SCORES_KEY = "pacman_scores_v1";
 const SCORES_MAX = 10;
 const squares = [];
 sScaredGhosts.loop = true;
+
+let dpadInitialized = false;
+let dpadHoldIntervals = new WeakMap();
 
 /* ====== FUNÇÕES DE ARMAZENAMENTO ====== */
 function loadScores() {
@@ -229,6 +232,8 @@ function loadLevel(levelIndex) {
     document.removeEventListener("keydown", movePacman);
     document.addEventListener("keydown", movePacman);
 
+    initDpad();
+
     scoreDisplay.innerHTML = score;
     levelDisplay.textContent = String(currentLevel + 1);
 }
@@ -375,6 +380,116 @@ function movePacman(e) {
     powerPelletEaten();
     checkForGameOver();
     checkForWin();
+}
+
+/* ====== D‑pad (botões) ====== */
+function initDpad() {
+    if (dpadInitialized) return;
+    const dpad = document.getElementById("dpad");
+    if (!dpad) return;
+
+    const buttons = Array.from(dpad.querySelectorAll(".dpad-btn"));
+
+    function handleActivate(dir) {
+        const map = {
+            up: "ArrowUp",
+            down: "ArrowDown",
+            left: "ArrowLeft",
+            right: "ArrowRight",
+        };
+        const key = map[dir];
+        if (!key) return;
+        movePacman({ key });
+    }
+
+    const HOLD_INTERVAL_MS = 150;
+
+    if (window.PointerEvent) {
+        buttons.forEach((btn) => {
+            const clearHold = () => {
+                btn.classList.remove("active");
+                const id = dpadHoldIntervals.get(btn);
+                if (id) {
+                    clearInterval(id);
+                    dpadHoldIntervals.delete(btn);
+                }
+            };
+
+            const onPointerDown = (e) => {
+                e.preventDefault();
+                btn.classList.add("active");
+                handleActivate(btn.dataset.dir);
+                const id = setInterval(
+                    () => handleActivate(btn.dataset.dir),
+                    HOLD_INTERVAL_MS
+                );
+                dpadHoldIntervals.set(btn, id);
+            };
+            const onPointerUp = () => clearHold();
+            const onPointerLeave = () => clearHold();
+            const onPointerCancel = () => clearHold();
+
+            btn.addEventListener("pointerdown", onPointerDown);
+            btn.addEventListener("pointerup", onPointerUp);
+            btn.addEventListener("pointercancel", onPointerCancel);
+            btn.addEventListener("pointerleave", onPointerLeave);
+
+            btn.setAttribute("tabindex", "0");
+            btn.addEventListener("keydown", (ev) => {
+                if (ev.key === "Enter" || ev.key === " ") {
+                    ev.preventDefault();
+                    btn.classList.add("active");
+                    handleActivate(btn.dataset.dir);
+                    setTimeout(() => btn.classList.remove("active"), 120);
+                }
+            });
+        });
+    } else {
+        buttons.forEach((btn) => {
+            const clearHold = () => {
+                btn.classList.remove("active");
+                const id = dpadHoldIntervals.get(btn);
+                if (id) {
+                    clearInterval(id);
+                    dpadHoldIntervals.delete(btn);
+                }
+            };
+
+            const onClick = (e) => {
+                e.preventDefault();
+                handleActivate(btn.dataset.dir);
+            };
+            const onTouchStart = (e) => {
+                e.preventDefault();
+                btn.classList.add("active");
+                handleActivate(btn.dataset.dir);
+                const id = setInterval(
+                    () => handleActivate(btn.dataset.dir),
+                    HOLD_INTERVAL_MS
+                );
+                dpadHoldIntervals.set(btn, id);
+            };
+
+            const onTouchEnd = () => clearHold();
+
+            btn.addEventListener("click", onClick);
+            btn.addEventListener("touchstart", onTouchStart);
+            btn.addEventListener("touchend", onTouchEnd);
+            btn.addEventListener("touchcancel", onTouchEnd);
+
+            btn.setAttribute("tabindex", "0");
+            btn.addEventListener("keydown", (ev) => {
+                if (ev.key === "Enter" || ev.key === " ") {
+                    ev.preventDefault();
+                    btn.classList.add("active");
+                    handleActivate(btn.dataset.dir);
+                    setTimeout(() => btn.classList.remove("active"), 120);
+                }
+            });
+        });
+    }
+
+    dpadInitialized = true;
 }
 
 /* ====== PONTOS / POWER PELLET ====== */
